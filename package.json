@@ -8,9 +8,9 @@
   },
   "keywords": [],
   "author": "CANMERTINYO",
-  "license": "ISC"
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "reflect-metadata": "^0.1.13"
   }
 }
