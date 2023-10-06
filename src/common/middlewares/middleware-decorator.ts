@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
 import 'reflect-metadata';
-import { Constructible } from '../common/core/interfaces/constructible.interface';
+import { Constructible } from '../core/interfaces/constructible.interface';
 
 const USE_MIDDLEWARES_METADATA = 'use:middlewares';
 
