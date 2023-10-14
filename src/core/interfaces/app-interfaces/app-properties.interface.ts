@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import { Constructible } from './constructible.interface';
-import { CustomProvider } from '../types/custom-provider.type';
+import { Constructible } from '../constructible.interface';
+import { CustomProvider } from '../../types/custom-provider.type';
 
 export interface AppProperties {
   port: number;
