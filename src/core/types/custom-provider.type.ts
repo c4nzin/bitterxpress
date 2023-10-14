@@ -1,6 +1,6 @@
 import { Constructible } from '../interfaces';
 
-export type CustomProvider = {
-  token: string | Constructible;
-  instance: any;
+export type CustomProvider<T = unknown> = {
+  token: string | Constructible<T>;
+  instance: T;
 };
