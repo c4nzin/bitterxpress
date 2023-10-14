@@ -9,10 +9,10 @@ import { ControllerMetadata } from '../../core/interfaces/controller-metadata.in
 import { MethodMetadata } from '../../core/interfaces/method-metadata.interface';
 import { ArgumentIndices } from '../../core/types/argument-indices.type';
 import { MethodArgumentMetadataKey } from '../../core/enums/method-arguments.enum';
-import { HttpMethods } from '../../core/enums/http-methods.enum';
+import { HttpMethods } from '../../core/enums/http-method-enums/http-methods.enum';
 import { ResponseHeadersMetadataKey } from '../../core/enums/response-headers.enum';
-import { DefaultHttpStatusMetadataKey } from '../../core/enums/default-http-method.enum';
-import { HttpMethodMetadataKey } from '../../core/enums/http-method-metadata.enum';
+import { DefaultHttpStatusMetadataKey } from '../../core/enums/http-method-enums/default-http-method.enum';
+import { HttpMethodMetadataKey } from '../../core/enums/http-method-enums/http-method-metadata.enum';
 import { MiddlewareMetadataKey } from '../../core/enums/middleware-metadata.enum';
 import { ControllerMetadataKey } from '../../core/enums/controller-enums/controller-metadata.enum';
 import { Headers } from '../../core/interfaces';

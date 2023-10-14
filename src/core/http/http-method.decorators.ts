@@ -1,4 +1,4 @@
-import { HttpMethods } from '../enums/http-methods.enum';
+import { HttpMethods } from '../enums/http-method-enums/http-methods.enum';
 import { httpMethodDecoratorFactory } from './http.factory';
 
 export const Get = httpMethodDecoratorFactory(HttpMethods.Get);
