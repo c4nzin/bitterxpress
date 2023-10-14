@@ -1,4 +1,4 @@
-import { LifecycleHookMetadataKey } from '../../core/enums/lifecycle-hooks.enum';
+import { LifecycleHookMetadataKey } from '../../core/enums/life-cycle-enums/lifecycle-hooks.enum';
 import { lifecycleHookDecoratorFactory } from './lifecycle-hook.decorator.factory';
 
 export const BeforeGlobalMiddlewaresBound = lifecycleHookDecoratorFactory(

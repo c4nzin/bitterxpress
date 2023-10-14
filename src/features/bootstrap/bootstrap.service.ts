@@ -8,7 +8,7 @@ import { CustomProvider } from '../../core/types/custom-provider.type';
 import { ControllerMetadata } from '../../core/interfaces/controller-metadata.interface';
 import { MethodMetadata } from '../../core/interfaces/method-metadata.interface';
 import { ArgumentIndices } from '../../core/types/argument-indices.type';
-import { MethodArgumentMetadataKey } from '../../core/enums/method-arguments.enum';
+import { MethodArgumentMetadataKey } from '../../core/enums/methods-enum/method-arguments.enum';
 import { HttpMethods } from '../../core/enums/http-method-enums/http-methods.enum';
 import { ResponseHeadersMetadataKey } from '../../core/enums/header-enums/response-headers.enum';
 import { DefaultHttpStatusMetadataKey } from '../../core/enums/http-method-enums/default-http-method.enum';
@@ -16,7 +16,7 @@ import { HttpMethodMetadataKey } from '../../core/enums/http-method-enums/http-m
 import { MiddlewareMetadataKey } from '../../core/enums/middleware-enums/middleware-metadata.enum';
 import { ControllerMetadataKey } from '../../core/enums/controller-enums/controller-metadata.enum';
 import { Headers } from '../../core/interfaces';
-import { LifecycleHookMetadataKey } from '../../core/enums/lifecycle-hooks.enum';
+import { LifecycleHookMetadataKey } from '../../core/enums/life-cycle-enums/lifecycle-hooks.enum';
 import { EXPRESS_APP_INSTANCE_TOKEN } from '../../core';
 
 export class BootstrapService {
