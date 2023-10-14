@@ -7,3 +7,4 @@ export * from './lifecycle-hooks.enum';
 export * from './method-arguments.enum';
 export * from './middleware-metadata.enum';
 export * from './response-headers.enum';
+export * from './inject-token-metadata.enum';
