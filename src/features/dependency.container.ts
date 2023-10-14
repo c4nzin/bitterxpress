@@ -16,7 +16,7 @@ class DependencyContainer {
   }
 
   static resolve<T>(token: Token<T>): T {
-    if (typeof token === 'string') throw 'Unknown token identifier';
+    if (typeof token === 'string') throw 'DependencyContainer: Unknown token identifier';
 
     const constructorParamTypes: any[] = Reflect.getMetadata(
       DependencyInjectionMetadataKey.PARAMTYPES,
@@ -36,7 +36,7 @@ class DependencyContainer {
       const injectToken: Token = (injectTokens && injectTokens[index]) || paramType;
 
       if (!injectToken) {
-        throw `Cannot resolve dependency of ${token} at index ${index}`;
+        throw `DependencyContainer: Unable to resolve dependency of ${token} at index ${index}`;
       }
 
       return DependencyContainer.get(injectToken);
