@@ -1,7 +1,7 @@
 import { HttpMethod } from '../enums/http-methods.enum';
 
-const METHOD_TOKEN = 'method';
-const PATH_TOKEN = 'path';
+export const METHOD_TOKEN = 'method';
+export const PATH_TOKEN = 'path';
 
 export function httpMethodDecoratorFactory(method: HttpMethod) {
   return function (path?: string): MethodDecorator {
