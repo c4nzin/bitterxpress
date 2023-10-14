@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum';
+import { DependencyInjectionMetadataKey } from '../core/enums/injection-enums/depedency-injection-keys.enum';
 import { Constructible } from '../core/interfaces/constructible.interface';
 import { Token } from '../core/types/token.type';
 
