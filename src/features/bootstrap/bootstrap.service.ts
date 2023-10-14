@@ -202,7 +202,7 @@ export class BootstrapService {
     if (httpMethod) {
       const path: string =
         Reflect.getMetadata(HttpMethodMetadataKey.PATH, controller.prototype, methodKey) || '';
-      const defaultHttpStatus: number = Reflect.getMetadata(
+      const defaultHttpStatus: number | undefined = Reflect.getMetadata(
         DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
         controller.prototype,
         methodKey,
@@ -213,11 +213,11 @@ export class BootstrapService {
           controller.prototype,
           methodKey,
         ) || [];
-      const headers: any = Reflect.getMetadata(
-        ResponseHeadersMetadataKey.HEADERS,
-        controller.prototype,
-        methodKey,
-      );
+
+      const headers: globalThis.Headers =
+        Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller.prototype, methodKey) ||
+        new Headers();
+
       const argumentIndices: ArgumentIndices = this.getArgumentIndices(
         controller.prototype,
         methodKey,
