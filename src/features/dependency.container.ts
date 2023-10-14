@@ -6,7 +6,7 @@ import { Token } from '../core/types/token.type';
 class DependencyContainer {
   private static readonly dependencies: Map<Token, any> = new Map();
 
-  static get<T = any>(token: Token<T>): T {
+  public static get<T = any>(token: Token<T>): T {
     if (!DependencyContainer.dependencies.has(token)) {
       const instance: T = DependencyContainer.resolve(token);
       DependencyContainer.dependencies.set(token, instance);
@@ -15,7 +15,7 @@ class DependencyContainer {
     return DependencyContainer.dependencies.get(token);
   }
 
-  static resolve<T>(token: Token<T>): T {
+  public static resolve<T>(token: Token<T>): T {
     if (typeof token === 'string') throw 'DependencyContainer: Unknown token identifier';
 
     const constructorParamTypes: any[] = Reflect.getMetadata(
@@ -28,7 +28,11 @@ class DependencyContainer {
       token,
     );
 
-    if (!constructorParamTypes || !constructorParamTypes.length) {
+    if (!constructorParamTypes) {
+      return new token();
+    }
+
+    if (!constructorParamTypes.length) {
       return new token();
     }
 
@@ -45,14 +49,14 @@ class DependencyContainer {
     return new token(...constructorParamInstances);
   }
 
-  static registerStringTokenDependency(token: string, instance: any) {
+  public static registerStringTokenDependency(token: string, instance: any) {
     DependencyContainer.registerDependency(token, instance);
   }
-  static registerClassTokenDependency<T>(token: Constructible<T>, instance?: any) {
+  public static registerClassTokenDependency<T>(token: Constructible<T>, instance?: any) {
     DependencyContainer.registerDependency(token, instance);
   }
 
-  static registerDependency<T = any>(token: Constructible<T> | string, instance?: any) {
+  public static registerDependency<T = any>(token: Constructible<T> | string, instance?: any) {
     DependencyContainer.dependencies.set(token, instance);
   }
 }
