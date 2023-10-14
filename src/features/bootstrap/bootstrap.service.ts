@@ -231,7 +231,6 @@ export class BootstrapService {
         headers,
       };
     }
-    return undefined;
   }
 
   private registerHandler(
