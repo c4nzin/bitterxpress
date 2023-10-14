@@ -129,23 +129,28 @@ export class BootstrapService {
 
   private registerController(controllerClass: Constructible) {
     const controllerMetadata: ControllerMetadata = this.getControllerMetadata(controllerClass);
-    const controller: any = DependencyContainer.get(controllerClass);
-    const keys: string[] = Object.keys(controllerClass.prototype);
+    const controllerInstance: any = DependencyContainer.get(controllerClass);
     const router: Router = express.Router();
+
     if (controllerMetadata.middlewares) {
       router.use(controllerMetadata.middlewares);
     }
-    keys.forEach((key: string) => {
+
+    const controllerMethods: string[] = Object.getOwnPropertyNames(controllerClass.prototype);
+
+    controllerMethods.forEach((methodKey: string) => {
       const methodMetadata: MethodMetadata | undefined = this.getMethodMetadata(
         controllerClass,
-        key,
+        methodKey,
       );
+
       if (methodMetadata) {
-        const handler: Function = controller[key].bind(controller);
-        const headers: any = {
+        const handler: Function = controllerInstance[methodKey].bind(controllerInstance);
+        const combinedHeaders: any = {
           ...(controllerMetadata.headers || {}),
           ...(methodMetadata.headers || {}),
         };
+
         this.registerHandler(
           router,
           methodMetadata.httpMethod,
@@ -154,15 +159,15 @@ export class BootstrapService {
           handler,
           methodMetadata.argumentIndices,
           methodMetadata.defaultHttpStatus || controllerMetadata.defaultHttpStatus,
-          headers,
+          combinedHeaders,
         );
+
         this.logger.info(
-          `Mapped ${methodMetadata.httpMethod.toUpperCase()} ${controllerMetadata.route}${
-            methodMetadata.path
-          }`,
+          `Mapped ${methodMetadata.httpMethod} ${controllerMetadata.route}${methodMetadata.path}`,
         );
       }
     });
+
     this.expressApp.use(controllerMetadata.route, router);
   }
 
