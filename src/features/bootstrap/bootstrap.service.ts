@@ -9,7 +9,7 @@ import { ControllerMetadata } from '../../core/interfaces/controller-metadata.in
 import { MethodMetadata } from '../../core/interfaces/method-metadata.interface';
 import { ArgumentIndices } from '../../core/types/argument-indices.type';
 import { MethodArgumentMetadataKey } from '../../core/enums/method-arguments.enum';
-import { HttpMethod } from '../../core/enums/http-methods.enum';
+import { HttpMethods } from '../../core/enums/http-methods.enum';
 import { ResponseHeadersMetadataKey } from '../../core/enums/response-headers.enum';
 import { DefaultHttpStatusMetadataKey } from '../../core/enums/default-http-method.enum';
 import { HttpMethodMetadataKey } from '../../core/enums/http-method-metadata.enum';
@@ -184,7 +184,7 @@ export class BootstrapService {
     controller: Constructible,
     methodKey: string,
   ): MethodMetadata | undefined {
-    const httpMethod: HttpMethod = Reflect.getMetadata(
+    const httpMethod: HttpMethods = Reflect.getMetadata(
       HttpMethodMetadataKey.METHOD,
       controller.prototype,
       methodKey,
@@ -226,7 +226,7 @@ export class BootstrapService {
 
   private registerHandler(
     router: Router,
-    method: HttpMethod,
+    method: HttpMethods,
     path: string,
     middlewares: RequestHandler[],
     handler: Function,

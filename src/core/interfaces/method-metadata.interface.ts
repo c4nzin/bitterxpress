@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
-import { HttpMethod } from '../enums/http-methods.enum';
+import { HttpMethods } from '../enums/http-methods.enum';
 import { ArgumentIndices } from '../types/argument-indices.type';
 
 export interface MethodMetadata {
-  httpMethod: HttpMethod;
+  httpMethod: HttpMethods;
   path: string;
   argumentIndices: ArgumentIndices;
   middlewares?: RequestHandler[];
