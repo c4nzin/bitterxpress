@@ -1,3 +1,10 @@
+ enum DependencyInjectionMetadataKey {
+    INJECT_TOKENS = 'inject:tokens',
+    PARAMTYPES = 'design:paramtypes',
+  }
+  
+
+
 export class DependencyContainer {
     private static readonly dependencies : Dependency[] = []
 
@@ -15,5 +22,30 @@ export class DependencyContainer {
         
 
         return DependencyContainer.resolve(token)
+    }
+
+    static resolve<T>(token:Token<T>):T {
+        if(typeof token === 'string') throw 'Unknown token identifier'
+
+        const constructorParamTypes:any[] = Reflect.getMetadata(DependencyInjectionMetadataKey.PARAMTYPES,token)
+
+        const injectTokens:Token[] = Reflect.getMetadata(DependencyInjectionMetadataKey.INJECT_TOKENS, token)
+
+        const constructorParamInstances:any[] = []
+
+        for(const instance of constructorParamInstances) {
+            let injectToken:Token = constructorParamTypes[instance]
+
+            if(injectTokens) {
+                injectToken = injectTokens[instance] || injectToken
+            }
+
+            if(!injectToken) {
+                throw `Cannot resolve dependency of ${token} at index ${instance}`
+            }
+
+            constructorParamInstances.push(DependencyContainer.get(injectToken))
+        }
+        return new token(...constructorParamInstances)
     }
 }
