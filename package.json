@@ -1,6 +1,6 @@
 {
   "name": "enhanced-express",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "better express.js experience",
   "main": "dist/index.js",
   "module": "dist/index.js",
