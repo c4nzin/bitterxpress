@@ -4,3 +4,4 @@ export * from './express-app-instance.decorator';
 export * from './inject.decorator';
 export * from './injectable.decorator';
 export * from './response-headers.decorator';
+export * from './controller.decorator';
