@@ -19,7 +19,7 @@ import { ControllerMetadataKey } from '../../core/enums/controller-metadata.enum
 import { Headers } from '../../core/interfaces';
 import { LifecycleHookMetadataKey } from '../../core/enums/lifecycle-hooks.enum';
 
-export class BootsTrapService {
+export class BootstrapService {
   private appInstance: any;
   private readonly expressApp: express.Express;
   private readonly logger: Logger;
