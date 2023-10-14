@@ -1,23 +1,28 @@
 import express, { RequestHandler, Router, Response, Request } from 'express';
 import { Logger } from '../../logger';
-import { Constructible } from '../../core/interfaces';
+import {
+  Constructible,
+  AppProperties,
+  EXPRESS_APP_INSTANCE_TOKEN,
+  AppMetadata,
+  LifecycleHookMetadataKey,
+  CustomProvider,
+  ControllerMetadata,
+  MethodMetadata,
+  ControllerMetadataKey,
+  DefaultHttpStatusMetadataKey,
+  ResponseHeadersMetadataKey,
+  MiddlewareMetadataKey,
+  HttpMethods,
+  HttpMethodMetadataKey,
+  ArgumentIndices,
+  MethodArgumentMetadataKey,
+} from '../../core';
 import { DependencyContainer } from '../dependency.container';
-import { AppProperties } from '../../core/interfaces/app-interfaces/app-properties.interface';
-import { AppMetadata } from '../../core/interfaces/app-interfaces/app-metadata.interface';
-import { CustomProvider } from '../../core/types/custom-provider.type';
-import { ControllerMetadata } from '../../core/interfaces/controller-interfaces/controller-metadata.interface';
-import { MethodMetadata } from '../../core/interfaces/method-metadata.interface';
-import { ArgumentIndices } from '../../core/types/argument-indices.type';
-import { MethodArgumentMetadataKey } from '../../core/enums/methods-enum/method-arguments.enum';
-import { HttpMethods } from '../../core/enums/http-method-enums/http-methods.enum';
-import { ResponseHeadersMetadataKey } from '../../core/enums/header-enums/response-headers.enum';
-import { DefaultHttpStatusMetadataKey } from '../../core/enums/http-method-enums/default-http-method.enum';
-import { HttpMethodMetadataKey } from '../../core/enums/http-method-enums/http-method-metadata.enum';
-import { MiddlewareMetadataKey } from '../../core/enums/middleware-enums/middleware-metadata.enum';
-import { ControllerMetadataKey } from '../../core/enums/controller-enums/controller-metadata.enum';
-import { Headers } from '../../core/interfaces';
-import { LifecycleHookMetadataKey } from '../../core/enums/life-cycle-enums/lifecycle-hooks.enum';
-import { EXPRESS_APP_INSTANCE_TOKEN } from '../../core';
+
+export interface Headers {
+  [P: string]: string;
+}
 
 export class BootstrapService {
   private appInstance: any;

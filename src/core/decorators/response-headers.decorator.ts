@@ -1,5 +1,5 @@
 import { ResponseHeadersMetadataKey } from '../enums/header-enums/response-headers.enum';
-import { Headers } from '../interfaces/headers.interface';
+import { Headers } from '../interfaces/headers/headers.interface';
 
 export function ResponseHeaders(headers: Headers): ClassDecorator & MethodDecorator {
   return function (target: any, key?: string | symbol) {
