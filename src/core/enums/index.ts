@@ -1,4 +1,4 @@
-export * from './controller-metadata.enum';
+export * from './controller-enums/controller-metadata.enum';
 export * from './default-http-method.enum';
 export * from './depedency-injection-keys.enum';
 export * from './http-method-metadata.enum';
