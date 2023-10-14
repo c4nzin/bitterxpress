@@ -4,9 +4,16 @@ import { Constructible } from '../../interfaces/constructible.interface';
 
 const USE_MIDDLEWARES_METADATA = 'use:middlewares';
 
-export function UseMiddlewares(...middlewares: RequestHandler[]): ClassDecorator & MethodDecorator {
+function UseMiddlewares(...middlewares: RequestHandler[]): ClassDecorator & MethodDecorator {
   return function (target: Constructible | any, key?: string | symbol) {
-    if (key) Reflect.defineMetadata(USE_MIDDLEWARES_METADATA, middlewares, target, key);
-    else Reflect.defineMetadata(USE_MIDDLEWARES_METADATA, middlewares, target);
+    const metadataKey = USE_MIDDLEWARES_METADATA;
+
+    if (key) {
+      Reflect.defineMetadata(metadataKey, middlewares, target, key);
+    } else {
+      Reflect.defineMetadata(metadataKey, middlewares, target);
+    }
   };
 }
+
+export { UseMiddlewares };
