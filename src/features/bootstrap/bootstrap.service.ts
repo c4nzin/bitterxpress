@@ -3,7 +3,6 @@ import { Logger } from '../../logger';
 import { Constructible } from '../../core/interfaces';
 import { DependencyContainer } from '../dependency.container';
 import { AppProperties } from '../../core/interfaces/app-properties.interface';
-import { EXPRESS_APP_INSTANCE_TOKEN } from '../../core/decorators/express-app-instance.decorator';
 import { AppMetadata } from '../../core/interfaces/app-metadata.interface';
 import { CustomProvider } from '../../core/types/custom-provider.type';
 import { ControllerMetadata } from '../../core/interfaces/controller-metadata.interface';
@@ -18,6 +17,7 @@ import { MiddlewareMetadataKey } from '../../core/enums/middleware-metadata.enum
 import { ControllerMetadataKey } from '../../core/enums/controller-metadata.enum';
 import { Headers } from '../../core/interfaces';
 import { LifecycleHookMetadataKey } from '../../core/enums/lifecycle-hooks.enum';
+import { EXPRESS_APP_INSTANCE_TOKEN } from '../../core';
 
 export class BootstrapService {
   private appInstance: any;
