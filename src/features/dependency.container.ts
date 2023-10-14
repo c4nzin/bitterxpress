@@ -1,26 +1,18 @@
 import 'reflect-metadata';
 import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum';
 import { Constructible } from '../core/interfaces/constructible.interface';
-import { Dependency } from '../core/interfaces/dependency.interface';
 import { Token } from '../core/types/token.type';
 
-export class DependencyContainer {
-  private static readonly dependencies: Dependency[] = [];
+class DependencyContainer {
+  private static readonly dependencies: Map<Token, any> = new Map();
 
   static get<T = any>(token: Token<T>): T {
-    let dependency: Dependency<T> | undefined = DependencyContainer.dependencies.find(
-      (dependency: Dependency) => dependency.token === token,
-    );
-
-    if (!dependency) {
+    if (!DependencyContainer.dependencies.has(token)) {
       const instance: T = DependencyContainer.resolve(token);
-      dependency = { token, instance };
-      DependencyContainer.dependencies.push(dependency);
+      DependencyContainer.dependencies.set(token, instance);
     }
 
-    if (dependency?.instance) return dependency.instance;
-
-    return DependencyContainer.resolve(token);
+    return DependencyContainer.dependencies.get(token);
   }
 
   static resolve<T>(token: Token<T>): T {
@@ -36,21 +28,20 @@ export class DependencyContainer {
       token,
     );
 
-    const constructorParamInstances: any[] = [];
+    if (!constructorParamTypes || !constructorParamTypes.length) {
+      return new token();
+    }
 
-    for (const instance of constructorParamInstances) {
-      let injectToken: Token = constructorParamTypes[instance];
-
-      if (injectTokens) {
-        injectToken = injectTokens[instance] || injectToken;
-      }
+    const constructorParamInstances: any[] = constructorParamTypes.map((paramType, index) => {
+      const injectToken: Token = (injectTokens && injectTokens[index]) || paramType;
 
       if (!injectToken) {
-        throw `Cannot resolve dependency of ${token} at index ${instance}`;
+        throw `Cannot resolve dependency of ${token} at index ${index}`;
       }
 
-      constructorParamInstances.push(DependencyContainer.get(injectToken));
-    }
+      return DependencyContainer.get(injectToken);
+    });
+
     return new token(...constructorParamInstances);
   }
 
@@ -62,6 +53,8 @@ export class DependencyContainer {
   }
 
   static registerDependency<T = any>(token: Constructible<T> | string, instance?: any) {
-    DependencyContainer.dependencies.push({ token, instance });
+    DependencyContainer.dependencies.set(token, instance);
   }
 }
+
+export { DependencyContainer };
