@@ -1,6 +1,5 @@
 import 'reflect-metadata';
-
-const DEFAULT_HTTP_STATUS_TOKEN = 'default-http-status';
+import { DEFAULT_HTTP_STATUS_TOKEN } from './http-status.constant';
 
 export function DefaultHttpStatus(code: number): ClassDecorator & MethodDecorator {
   return function (target: any, key?: string | symbol) {
