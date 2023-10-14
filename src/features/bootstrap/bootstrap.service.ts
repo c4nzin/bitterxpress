@@ -1,5 +1,5 @@
 import express, { RequestHandler, Router, Response, Request } from 'express';
-import { Logger } from '../../logger';
+import { Logger } from '../logger/logger';
 import {
   Constructible,
   AppProperties,
