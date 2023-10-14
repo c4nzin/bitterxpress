@@ -243,34 +243,29 @@ export class BootstrapService {
     defaultHttpStatus?: number,
     headers?: Headers,
   ) {
-    const expressHandler: RequestHandler = async (req: Request, res: Response) => {
+    router[method](path, ...middlewares, async (req: Request, res: Response) => {
       const args: any[] = [];
-      if (argumentIndices[MethodArgumentMetadataKey.BODY] != null) {
-        args[argumentIndices[MethodArgumentMetadataKey.BODY] as number] = req.body;
+
+      for (const [key, index] of Object.entries(argumentIndices)) {
+        if (index !== null) {
+          args[index] =
+            key === MethodArgumentMetadataKey.RESPONSE ? res : req[key as keyof typeof req];
+        }
       }
-      if (argumentIndices[MethodArgumentMetadataKey.QUERY] != null) {
-        args[argumentIndices[MethodArgumentMetadataKey.QUERY] as number] = req.query;
-      }
-      if (argumentIndices[MethodArgumentMetadataKey.PARAMS] != null) {
-        args[argumentIndices[MethodArgumentMetadataKey.PARAMS] as number] = req.params;
-      }
-      if (argumentIndices[MethodArgumentMetadataKey.REQUEST] != null) {
-        args[argumentIndices[MethodArgumentMetadataKey.REQUEST] as number] = req;
-      }
-      if (argumentIndices[MethodArgumentMetadataKey.RESPONSE] != null) {
-        args[argumentIndices[MethodArgumentMetadataKey.RESPONSE] as number] = res;
-      }
+
       if (defaultHttpStatus) {
         res.status(defaultHttpStatus);
       }
+
       if (headers) {
-        res.set(headers);
+        for (const [headerName, headerValue] of Object.entries(headers)) {
+          res.setHeader(headerName, headerValue);
+        }
       }
+
       const response: any = await handler(...args);
       res.send(response);
-    };
-    const handlers: RequestHandler[] = [...middlewares, expressHandler];
-    router[method](path, ...handlers);
+    });
   }
 
   private getArgumentIndices(target: any, methodKey: string): ArgumentIndices {
