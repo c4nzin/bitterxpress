@@ -1,59 +1,66 @@
-import 'reflect-metadata'
-import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum'
-import { Constructible } from '../core/interfaces/constructible.interface'
+import 'reflect-metadata';
+import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum';
+import { Constructible } from '../core/interfaces/constructible.interface';
+import { Token } from '../core/interfaces/token.interface';
 
 export class DependencyContainer {
-    private static readonly dependencies : Dependency[] = []
+  private static readonly dependencies: Dependency[] = [];
 
-    static get<T = any>(token:Token<T>): T {
-        let dependency: Dependency<T> | undefined = DependencyContainer.dependencies.find((dependency:Dependency) => dependency.token === token)
+  static get<T = any>(token: Token<T>): T {
+    let dependency: Dependency<T> | undefined = DependencyContainer.dependencies.find(
+      (dependency: Dependency) => dependency.token === token,
+    );
 
-        if(!dependency) {
-            const instance : T = DependencyContainer.resolve(token)
-            dependency = {token,instance}
-            DependencyContainer.dependencies.push(dependency)
-        }
-        
-
-        if(dependency?.instance) return dependency.instance
-        
-
-        return DependencyContainer.resolve(token)
+    if (!dependency) {
+      const instance: T = DependencyContainer.resolve(token);
+      dependency = { token, instance };
+      DependencyContainer.dependencies.push(dependency);
     }
 
-    static resolve<T>(token:Token<T>):T {
-        if(typeof token === 'string') throw 'Unknown token identifier'
+    if (dependency?.instance) return dependency.instance;
 
-        const constructorParamTypes:any[] = Reflect.getMetadata(DependencyInjectionMetadataKey.PARAMTYPES,token)
+    return DependencyContainer.resolve(token);
+  }
 
-        const injectTokens:Token[] = Reflect.getMetadata(DependencyInjectionMetadataKey.INJECT_TOKENS, token)
+  static resolve<T>(token: Token<T>): T {
+    if (typeof token === 'string') throw 'Unknown token identifier';
 
-        const constructorParamInstances:any[] = []
+    const constructorParamTypes: any[] = Reflect.getMetadata(
+      DependencyInjectionMetadataKey.PARAMTYPES,
+      token,
+    );
 
-        for(const instance of constructorParamInstances) {
-            let injectToken:Token = constructorParamTypes[instance]
+    const injectTokens: Token[] = Reflect.getMetadata(
+      DependencyInjectionMetadataKey.INJECT_TOKENS,
+      token,
+    );
 
-            if(injectTokens) {
-                injectToken = injectTokens[instance] || injectToken
-            }
+    const constructorParamInstances: any[] = [];
 
-            if(!injectToken) {
-                throw `Cannot resolve dependency of ${token} at index ${instance}`
-            }
+    for (const instance of constructorParamInstances) {
+      let injectToken: Token = constructorParamTypes[instance];
 
-            constructorParamInstances.push(DependencyContainer.get(injectToken))
-        }
-        return new token(...constructorParamInstances)
+      if (injectTokens) {
+        injectToken = injectTokens[instance] || injectToken;
+      }
+
+      if (!injectToken) {
+        throw `Cannot resolve dependency of ${token} at index ${instance}`;
+      }
+
+      constructorParamInstances.push(DependencyContainer.get(injectToken));
     }
+    return new token(...constructorParamInstances);
+  }
 
-    static registerStringTokenDependency(token:string, instance:any) {
-        DependencyContainer.registerDependency(token,instance)
-    }
-    static registerClassTokenDependency<T>(token:Constructible<T>, instance?:any) {
-        DependencyContainer.registerDependency(token,instance)
-    }
+  static registerStringTokenDependency(token: string, instance: any) {
+    DependencyContainer.registerDependency(token, instance);
+  }
+  static registerClassTokenDependency<T>(token: Constructible<T>, instance?: any) {
+    DependencyContainer.registerDependency(token, instance);
+  }
 
-    static registerDependency<T = any>(token:Constructible<T>|string , instance?:any) {
-        DependencyContainer.dependencies.push({token,instance})
-    }
+  static registerDependency<T = any>(token: Constructible<T> | string, instance?: any) {
+    DependencyContainer.dependencies.push({ token, instance });
+  }
 }
