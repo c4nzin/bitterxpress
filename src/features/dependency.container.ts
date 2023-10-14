@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum';
 import { Constructible } from '../core/interfaces/constructible.interface';
-import { Token } from '../core/interfaces/token.interface';
+import { Dependency } from '../core/interfaces/dependency.interface';
+import { Token } from '../core/types/token.type';
 
 export class DependencyContainer {
   private static readonly dependencies: Dependency[] = [];
