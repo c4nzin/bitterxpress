@@ -1,4 +1,4 @@
-import { ControllerMetadataKey } from '../enums';
+import { ControllerMetadataKey } from '../../enums';
 
 export function Controller(route: string): ClassDecorator {
   return function (target: any) {
