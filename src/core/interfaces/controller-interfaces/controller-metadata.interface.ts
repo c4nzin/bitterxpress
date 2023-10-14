@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { Headers } from '../headers/headers.interface';
+import { Headers } from '../../../features';
 
 export interface ControllerMetadata {
   route: string;
