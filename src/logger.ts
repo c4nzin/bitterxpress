@@ -1,16 +1,19 @@
 import { ILogger } from './core/interfaces/logger.interface';
+import pino from 'pino';
+
+const logger = pino();
 
 export class Logger implements ILogger {
   log(message: string) {
-    console.log(message);
+    logger.info(message);
   }
   error(message: string) {
-    console.error(message);
+    logger.error(message);
   }
   warning(message: string) {
-    console.warn(message);
+    logger.warn(message);
   }
   info(message: string) {
-    console.info(message);
+    logger.info(message);
   }
 }
