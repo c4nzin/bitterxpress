@@ -1,9 +1,5 @@
- enum DependencyInjectionMetadataKey {
-    INJECT_TOKENS = 'inject:tokens',
-    PARAMTYPES = 'design:paramtypes',
-  }
-  
-
+import 'reflect-metadata'
+import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum'
 
 export class DependencyContainer {
     private static readonly dependencies : Dependency[] = []
