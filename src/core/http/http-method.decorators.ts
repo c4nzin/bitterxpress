@@ -1,12 +1,12 @@
 import { HttpMethod } from '../enums/http-methods.enum';
 import { httpMethodDecoratorFactory } from './http.factory';
 
-export const GET = httpMethodDecoratorFactory(HttpMethod.Get);
-export const POST = httpMethodDecoratorFactory(HttpMethod.Post);
-export const PUT = httpMethodDecoratorFactory(HttpMethod.Put);
-export const TRACE = httpMethodDecoratorFactory(HttpMethod.Trace);
-export const PATCH = httpMethodDecoratorFactory(HttpMethod.Patch);
-export const CONNECT = httpMethodDecoratorFactory(HttpMethod.Connect);
-export const DELETE = httpMethodDecoratorFactory(HttpMethod.Delete);
-export const HEAD = httpMethodDecoratorFactory(HttpMethod.Head);
-export const OPTIONS = httpMethodDecoratorFactory(HttpMethod.Options);
+export const Get = httpMethodDecoratorFactory(HttpMethod.Get);
+export const Post = httpMethodDecoratorFactory(HttpMethod.Post);
+export const Put = httpMethodDecoratorFactory(HttpMethod.Put);
+export const Trace = httpMethodDecoratorFactory(HttpMethod.Trace);
+export const Patch = httpMethodDecoratorFactory(HttpMethod.Patch);
+export const Connect = httpMethodDecoratorFactory(HttpMethod.Connect);
+export const Delete = httpMethodDecoratorFactory(HttpMethod.Delete);
+export const Head = httpMethodDecoratorFactory(HttpMethod.Head);
+export const Options = httpMethodDecoratorFactory(HttpMethod.Options);
