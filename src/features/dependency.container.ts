@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import { DependencyInjectionMetadataKey } from '../core/enums/depedency-injection-keys.enum'
+import { Constructible } from '../core/interfaces/constructible.interface'
 
 export class DependencyContainer {
     private static readonly dependencies : Dependency[] = []
@@ -43,5 +44,16 @@ export class DependencyContainer {
             constructorParamInstances.push(DependencyContainer.get(injectToken))
         }
         return new token(...constructorParamInstances)
+    }
+
+    static registerStringTokenDependency(token:string, instance:any) {
+        DependencyContainer.registerDependency(token,instance)
+    }
+    static registerClassTokenDependency<T>(token:Constructible<T>, instance?:any) {
+        DependencyContainer.registerDependency(token,instance)
+    }
+
+    static registerDependency<T = any>(token:Constructible<T>|string , instance?:any) {
+        DependencyContainer.dependencies.push({token,instance})
     }
 }
