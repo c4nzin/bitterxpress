@@ -22,6 +22,10 @@ import {
   ResponseHeadersMetadataKey,
 } from '../../core';
 
+interface Headers {
+  [P: string]: any;
+}
+
 export class BootstrapService {
   private appInstance: any;
   private readonly expressApp: express.Express;
@@ -148,7 +152,7 @@ export class BootstrapService {
       );
       if (methodMetadata) {
         const handler: Function = controller[key].bind(controller);
-        const headers: Headers = {
+        const headers: any = {
           ...(controllerMetadata.headers || {}),
           ...(methodMetadata.headers || {}),
         };
@@ -209,7 +213,7 @@ export class BootstrapService {
           controller.prototype,
           methodKey,
         ) || [];
-      const headers: Headers = Reflect.getMetadata(
+      const headers: any = Reflect.getMetadata(
         ResponseHeadersMetadataKey.HEADERS,
         controller.prototype,
         methodKey,

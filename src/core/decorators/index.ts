@@ -7,4 +7,4 @@ export * from './http-status/';
 export * from './inject.decorator';
 export * from './injectable.decorator';
 export * from './request.decorators';
-export * from './response-headers.decorator';
+export { ResponseHeaders } from './response-headers.decorator';
