@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { AppProperties } from '../interfaces/app-interfaces/app-properties.interface';
 import { BootstrapService } from '../../features/bootstrap/bootstrap.service';
 
