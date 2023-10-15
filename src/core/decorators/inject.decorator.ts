@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { INJECT_TOKEN_METADATA } from '../enums';
 
 export function Inject(token: string): any {

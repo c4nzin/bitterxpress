@@ -1,4 +1,5 @@
 import { RequestHandler } from 'express';
+import 'reflect-metadata';
 import { Constructible } from '../../interfaces/constructible.interface';
 import { USE_MIDDLEWARES_METADATA } from './middlewares-constants';
 

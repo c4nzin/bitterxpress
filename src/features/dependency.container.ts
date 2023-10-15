@@ -1,5 +1,4 @@
 import { Dependency, DependencyInjectionMetadataKey, Constructible, Token } from '../core';
-import 'reflect-metadata';
 
 export class DependencyContainer {
   private static readonly dependencies: Dependency[] = [];
