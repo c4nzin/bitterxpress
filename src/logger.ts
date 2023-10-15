@@ -1,4 +1,4 @@
-import { ILogger } from '../../core/interfaces/logger.interface';
+import { ILogger } from './core/interfaces/logger.interface';
 import pino from 'pino';
 
 const logger = pino();
