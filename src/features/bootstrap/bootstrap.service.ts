@@ -119,9 +119,7 @@ export class BootstrapService {
   }
 
   private registerControllers(controllers: Constructible[]) {
-    controllers.forEach((controller: Constructible) => {
-      this.registerController(controller);
-    });
+    controllers.forEach((controllers: Constructible) => this.registerController(controllers));
   }
 
   private registerCustomProviders(providers: CustomProvider[]) {
