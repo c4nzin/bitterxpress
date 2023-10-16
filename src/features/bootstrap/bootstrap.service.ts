@@ -123,10 +123,10 @@ export class BootstrapService {
   }
 
   private registerCustomProviders(providers: CustomProvider[]) {
-    providers.forEach((provider: CustomProvider) => {
-      if (typeof provider.token === 'string')
-        DependencyContainer.registerStringTokenDependency(provider.token, provider.instance);
-      else DependencyContainer.registerClassTokenDependency(provider.token, provider.instance);
+    providers.forEach((provider) => {
+      typeof provider.token === 'string'
+        ? DependencyContainer.registerStringTokenDependency(provider.token, provider.instance)
+        : DependencyContainer.registerClassTokenDependency(provider.token, provider.instance);
     });
   }
 
