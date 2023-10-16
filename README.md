@@ -1,12 +1,7 @@
 
 ![Logo](https://github.com/canmertinyo/bitter-press/assets/38213551/dfc04ebe-b9f9-43aa-997c-f4c765016015)
 
-
 # BitterPress
-
-
-
-
 
 ### Short Brief
 It seems like you're encountering some challenges when trying to use TypeScript with Express, and you're looking for a solution that provides more structure and takes advantage of TypeScript decorators. One solution that fits this description is BitterPress.
@@ -135,27 +130,29 @@ I want to explain my hooks without going into too much detail,
 
 ### @BeforeGlobalMiddlewaresBound
 
-The "BeforeGlobalMiddlewaresBound" hook represents the portion that will be executed before middleware is defined in the application. If you have such operations, this hook can be beneficial for you.
+the hook represents the portion that will be executed before middleware is defined in the application. If you have such operations, this hook can be beneficial for you.
 
 ### @AfterGlobalMiddlewaresBound
 
-The "AfterGlobalMiddlewaresBound" hook represents the code that will be executed after middlewares have been applied in the application.
+The hook represents the code that will be executed after middlewares have been applied in the application.
 
 ### @BeforeRoutesBound
 
-The "BeforeRoutesBound" hook represents the operations that will be executed before routes are defined. If you want to run your code before defining routes, you should use this hook.
+The hook represents the operations that will be executed before routes are defined. If you want to run your code before defining routes, you should use this hook.
 
 ### @AfterRoutesBound
 
-The "AfterRoutesBound" hook represents the operations that will be executed after routes have been defined.
+The hook represents the operations that will be executed after routes have been defined.
 
 ### @BeforeListenStarted
 
-The "BeforeListenStarted" hook represents the operations that will be executed before your server is started.
+The hook represents the operations that will be executed before your server is started.
 
 ### @AfterListenStarted
 
-The "AfterListenStarted" hook represents the operations that will be executed after your server has started running.
+The  hook represents the operations that will be executed after your server has started running.
+
+Some Examples About Life Cycle Feature
 
 ```typescript
 
