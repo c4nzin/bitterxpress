@@ -1,4 +1,4 @@
-import { DependencyContainer } from '../../features/dependency.container';
+import { DependencyContainer } from '../container/dependency.container';
 import { InjectableOptions } from '../interfaces/injectable-options.interface';
 
 export function Injectable(injectableOptions?: InjectableOptions): ClassDecorator {

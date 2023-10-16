@@ -18,7 +18,7 @@ import {
   ArgumentIndices,
   MethodArgumentMetadataKey,
 } from '../../core';
-import { DependencyContainer } from '../dependency.container';
+import { DependencyContainer } from '../../core/container/dependency.container';
 
 export interface Headers {
   [P: string]: string;

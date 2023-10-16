@@ -5,3 +5,4 @@ export * from './enums/';
 export * from './http';
 export * from './interfaces';
 export * from './types';
+export * from './container/dependency.container';
