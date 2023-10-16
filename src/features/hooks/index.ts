@@ -1,2 +1,2 @@
 export * from './lifecycle-hook.decorator';
-export * from './lifecycle-hook.decorator.factory';
+export * from './factories/lifecycle-hook.decorator.factory';
