@@ -8,7 +8,7 @@ class DependencyContainer {
 
   public static get<T = any>(token: Token<T>): T {
     if (!DependencyContainer.dependencies.has(token)) {
-      DependencyContainer.dependencies.set(token, DependencyContainer.resolve(token));
+      DependencyContainer.registerDependency(token);
     }
 
     return DependencyContainer.dependencies.get(token);
