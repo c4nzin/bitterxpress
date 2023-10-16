@@ -1,12 +1,7 @@
 
 ![Logo](https://github.com/canmertinyo/bitter-press/assets/38213551/dfc04ebe-b9f9-43aa-997c-f4c765016015)
 
-
 # BitterPress
-
-
-
-
 
 ### Short Brief
 It seems like you're encountering some challenges when trying to use TypeScript with Express, and you're looking for a solution that provides more structure and takes advantage of TypeScript decorators. One solution that fits this description is BitterPress.
@@ -156,6 +151,8 @@ The "BeforeListenStarted" hook represents the operations that will be executed b
 ### @AfterListenStarted
 
 The "AfterListenStarted" hook represents the operations that will be executed after your server has started running.
+
+Some Examples About Life Cycle Feature
 
 ```typescript
 
