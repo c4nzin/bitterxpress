@@ -265,10 +265,10 @@ export class BootstrapService {
   }
 
   private getArgumentIndices(target: any, methodKey: string): ArgumentIndices {
-    const indices: ArgumentIndices = {};
+    const indices: ArgumentIndices = {} as ArgumentIndices;
 
     for (const key of Object.values(MethodArgumentMetadataKey)) {
-      indices[key as MethodArgumentMetadataKey] = Reflect.getMetadata(key, target, methodKey);
+      indices[key] = Reflect.getMetadata(key, target, methodKey);
     }
 
     return indices;
