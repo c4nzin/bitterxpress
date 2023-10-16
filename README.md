@@ -1,5 +1,6 @@
 
-# BitterPress
+![Logo](https://github.com/canmertinyo/bitter-press/assets/38213551/dfc04ebe-b9f9-43aa-997c-f4c765016015)
+
 
 
 
