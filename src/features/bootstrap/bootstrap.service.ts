@@ -84,38 +84,22 @@ export class BootstrapService {
   }
 
   private getAppMetadata(): AppMetadata {
-    const beforeGlobalMiddlewaresBoundMethodKey: string = Reflect.getMetadata(
+    const metadataKeys: LifecycleHookMetadataKey[] = [
       LifecycleHookMetadataKey.BEFORE_MIDDLEWARES_BOUND,
-      this.appClass.prototype,
-    );
-    const afterGlobalMiddlewaresBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.AFTER_MIDDLEWARES_BOUND,
-      this.appClass.prototype,
-    );
-    const beforeRoutesBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.BEFORE_ROUTES_BOUND,
-      this.appClass.prototype,
-    );
-    const afterRoutesBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.AFTER_ROUTES_BOUND,
-      this.appClass.prototype,
-    );
-    const beforeListenStartedMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.BEFORE_LISTEN_STARTED,
-      this.appClass.prototype,
-    );
-    const afterListenStartedMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.AFTER_LISTEN_STARTED,
-      this.appClass.prototype,
-    );
-    return {
-      beforeGlobalMiddlewaresBoundMethodKey,
-      afterGlobalMiddlewaresBoundMethodKey,
-      beforeRoutesBoundMethodKey,
-      afterRoutesBoundMethodKey,
-      beforeListenStartedMethodKey,
-      afterListenStartedMethodKey,
-    };
+    ];
+
+    const metadata: any = {};
+
+    metadataKeys.forEach((key) => {
+      metadata[key] = Reflect.getMetadata(key, this.appClass.prototype) || '';
+    });
+
+    return metadata;
   }
 
   private registerControllers(controllers: Constructible[]) {
