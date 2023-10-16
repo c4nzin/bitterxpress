@@ -2,6 +2,8 @@
 ![Logo](https://github.com/canmertinyo/bitter-press/assets/38213551/dfc04ebe-b9f9-43aa-997c-f4c765016015)
 
 
+# BitterPress
+
 
 
 
@@ -75,26 +77,24 @@ import { App , Controller} from 'bitter-press';
 @Controller('/auth')
 export class ExampleController {
 
-    //GET
-    @Get(':id')
+    @GET(':id')
     public async getSpecificUser() {
         return 'CANMERTINYO!'
     }
 
-    //POST
-    @Post('/register')
+    @POST('/register')
     public async register() {
         return "registered!"
     }
 
-    //DELETE
-    @Delete()
+    @DELETE()
     public deleteUser() {
         return "success"
     }
 }
 
 ```
+And you can use other methods like: patch, update, put ...etc
 
 ## Custom Providers
 In addition to registering services, BitterPress allows you to define custom providers that can be injected into your application. These custom providers can be associated with string tokens or redefine what is injected, replacing class instances by using class tokens.
@@ -117,6 +117,81 @@ import { App , Controller, useGlobalMiddlewares, customProdivers} from 'bitter-p
 })
 export class ExampleAppModule {}
 ```
+
+## Life Cycle Hooks
+
+I was heavily inspired by the Vue.js framework while creating these hooks, and I integrated them into this framework.
+
+Current available hooks:
+- BeforeGlobalMiddlewaresBound
+- AfterGlobalMiddlewaresBound
+- BeforeRoutesBound
+- AfterRoutesBound
+- BeforeListenStarted
+- AfterListenStarted
+
+
+I want to explain my hooks without going into too much detail,
+
+### @BeforeGlobalMiddlewaresBound
+
+The "BeforeGlobalMiddlewaresBound" hook represents the portion that will be executed before middleware is defined in the application. If you have such operations, this hook can be beneficial for you.
+
+### @AfterGlobalMiddlewaresBound
+
+The "AfterGlobalMiddlewaresBound" hook represents the code that will be executed after middlewares have been applied in the application.
+
+### @BeforeRoutesBound
+
+The "BeforeRoutesBound" hook represents the operations that will be executed before routes are defined. If you want to run your code before defining routes, you should use this hook.
+
+### @AfterRoutesBound
+
+The "AfterRoutesBound" hook represents the operations that will be executed after routes have been defined.
+
+### @BeforeListenStarted
+
+The "BeforeListenStarted" hook represents the operations that will be executed before your server is started.
+
+### @AfterListenStarted
+
+The "AfterListenStarted" hook represents the operations that will be executed after your server has started running.
+
+```typescript
+
+  @BeforeGlobalMiddlewaresBound()
+  private beforeGlobalMiddlewaresBound() {
+      console.info('I am executed just before middlewares are bound');
+  }
+
+  @AfterGlobalMiddlewaresBound()
+  private afterGlobalMiddlewaresBound() {
+      console.info('I am executed just after middlewares are bound');
+      this.expressApp.use(express.urlencoded());
+  }
+
+  @BeforeListenStarted() 
+  private beforeListenStarted() {
+    console.log('I am executed just before server are bound')
+  }
+
+  @AfterListenStarted() 
+  private afterListenStarted() {
+    console.log('I am executed just after server are bound')
+  }
+
+ @BeforeRoutesBound()
+  private beforeRoutesBound() {
+    console.log('I am executed just before routes are bound');
+  }
+
+  @AfterRoutesBound()
+  private afterRoutesBound() {
+    console.log('I am executed just after routes are bound');
+  }
+
+ 
+```
 ## Cloning The Repo
 
 Clone the repo
@@ -138,4 +213,7 @@ Install required dependencies with:
 ```
 
 
+  
+
+  
   
