@@ -15,7 +15,7 @@ class DependencyContainer {
   }
 
   public static resolve<T>(token: Token<T>): T {
-    if (typeof token === 'string') throw 'DependencyContainer: Unknown token identifier';
+    if (typeof token === 'string') throw new Error('DependencyContainer: Unknown token identifier');
 
     const constructorParamTypes: any[] = Reflect.getMetadata(
       DependencyInjectionMetadataKey.PARAMTYPES,
@@ -27,11 +27,7 @@ class DependencyContainer {
       token,
     );
 
-    if (!constructorParamTypes) {
-      return new token();
-    }
-
-    if (!constructorParamTypes.length) {
+    if (!constructorParamTypes || constructorParamTypes.length === 0) {
       return new token();
     }
 
