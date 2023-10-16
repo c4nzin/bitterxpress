@@ -1,4 +1,4 @@
-export * from './common/middlewares/';
+export * from './decorators/middlewares';
 export * from './decorators';
 export * from './decorators/http-status';
 export * from './enums/';
