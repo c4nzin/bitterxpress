@@ -76,19 +76,19 @@ import { App , Controller} from 'bitter-press';
 export class ExampleController {
 
     //GET
-    @GET(':id')
+    @Get(':id')
     public async getSpecificUser() {
         return 'CANMERTINYO!'
     }
 
     //POST
-    @POST('/register')
+    @Post('/register')
     public async register() {
         return "registered!"
     }
 
     //DELETE
-    @DELETE()
+    @Delete()
     public deleteUser() {
         return "success"
     }
