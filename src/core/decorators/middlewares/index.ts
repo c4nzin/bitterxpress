@@ -1,2 +1,2 @@
-export * from './middleware-decorator';
-export * from './middlewares-constants';
+export * from './decorators/middleware-decorator';
+export * from '../constants/middlewares-constants';

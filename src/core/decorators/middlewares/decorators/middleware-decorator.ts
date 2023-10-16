@@ -1,7 +1,7 @@
 import { RequestHandler } from 'express';
 import 'reflect-metadata';
-import { Constructible } from '../../interfaces/constructible.interface';
-import { USE_MIDDLEWARES_METADATA } from './middlewares-constants';
+import { Constructible } from '../../../interfaces/constructible.interface';
+import { USE_MIDDLEWARES_METADATA } from '../../constants/middlewares-constants';
 
 function UseMiddlewares(...middlewares: RequestHandler[]): ClassDecorator & MethodDecorator {
   return function (target: Constructible | any, key?: string | symbol) {
