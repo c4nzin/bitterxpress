@@ -8,8 +8,7 @@ class DependencyContainer {
 
   public static get<T = any>(token: Token<T>): T {
     if (!DependencyContainer.dependencies.has(token)) {
-      const instance: T = DependencyContainer.resolve(token);
-      DependencyContainer.dependencies.set(token, instance);
+      DependencyContainer.dependencies.set(token, DependencyContainer.resolve(token));
     }
 
     return DependencyContainer.dependencies.get(token);
