@@ -174,42 +174,32 @@ export class BootstrapService {
     controller: Constructible,
     methodKey: string,
   ): MethodMetadata | undefined {
-    const httpMethod: HttpMethods = Reflect.getMetadata(
-      HttpMethodMetadataKey.METHOD,
-      controller.prototype,
-      methodKey,
-    );
-    if (httpMethod) {
-      const path: string =
-        Reflect.getMetadata(HttpMethodMetadataKey.PATH, controller.prototype, methodKey) || '';
-      const defaultHttpStatus: number | undefined = Reflect.getMetadata(
+    const methodMetadata: MethodMetadata = {
+      httpMethod: Reflect.getMetadata(
+        HttpMethodMetadataKey.METHOD,
+        controller.prototype,
+        methodKey,
+      ),
+      path: Reflect.getMetadata(HttpMethodMetadataKey.PATH, controller.prototype, methodKey) || '',
+      defaultHttpStatus: Reflect.getMetadata(
         DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
         controller.prototype,
         methodKey,
-      );
-      const middlewares: RequestHandler[] =
+      ),
+      middlewares:
         Reflect.getMetadata(
           MiddlewareMetadataKey.USE_MIDDLEWARES,
           controller.prototype,
           methodKey,
-        ) || [];
-
-      const headers: globalThis.Headers =
+        ) || [],
+      headers:
         Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller.prototype, methodKey) ||
-        new Headers();
+        {},
+      argumentIndices: this.getArgumentIndices(controller.prototype, methodKey),
+    };
 
-      const argumentIndices: ArgumentIndices = this.getArgumentIndices(
-        controller.prototype,
-        methodKey,
-      );
-      return {
-        httpMethod,
-        path,
-        defaultHttpStatus,
-        middlewares,
-        argumentIndices,
-        headers,
-      };
+    if (methodMetadata.httpMethod) {
+      return methodMetadata;
     }
   }
 
