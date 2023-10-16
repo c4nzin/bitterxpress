@@ -175,21 +175,14 @@ export class BootstrapService {
   }
 
   private getControllerMetadata(controller: Constructible): ControllerMetadata {
-    const route: string = Reflect.getMetadata(ControllerMetadataKey.ROUTE, controller) || '';
-    const defaultHttpStatus = Reflect.getMetadata(
-      DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
-      controller,
-    );
-    const headers: Headers =
-      Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller) || {};
-    const middlewares =
-      Reflect.getMetadata(MiddlewareMetadataKey.USE_MIDDLEWARES, controller) || [];
-
     return {
-      route,
-      defaultHttpStatus,
-      headers,
-      middlewares,
+      route: Reflect.getMetadata(ControllerMetadataKey.ROUTE, controller) || '',
+      defaultHttpStatus: Reflect.getMetadata(
+        DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
+        controller,
+      ),
+      headers: Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller) || {},
+      middlewares: Reflect.getMetadata(MiddlewareMetadataKey.USE_MIDDLEWARES, controller) || [],
     };
   }
 
