@@ -229,7 +229,7 @@ export class BootstrapService {
     }
   }
 
-  private registerHandler(
+  private async registerHandler(
     router: Router,
     method: HttpMethods,
     path: string,
