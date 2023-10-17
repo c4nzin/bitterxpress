@@ -1,4 +1,4 @@
-export * from './app.decorator';
+export * from './setup-app.decorator';
 export * from './argument-decorator.factory';
 export * from './constants/express-app-instance.constant';
 export * from './controller/controller.decorator';
