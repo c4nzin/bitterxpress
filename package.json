@@ -1,6 +1,6 @@
 {
   "name": "bitter-press",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "better express.js experience",
   "main": "dist/index.js",
   "module": "dist/index.js",
