@@ -51,9 +51,9 @@ Now you are ready to go.
 You can use a custom middleware with the app decorator, set the server's port, or use a specific controlle, also you can define a custom provider
 
 ```typescript
-import { App , Controller, useGlobalMiddlewares, customProdivers} from 'bitter-press';
+import { SetupApp , Controller, useGlobalMiddlewares, customProdivers} from 'bitter-press';
 
-@App({
+@SetupApp({
   port: 3000,
   controller : [],
   useGlobalMiddlewares: [],
@@ -72,17 +72,17 @@ import { App , Controller} from 'bitter-press';
 @Controller('/auth')
 export class ExampleController {
 
-    @GET(':id')
+    @Get(':id')
     public async getSpecificUser() {
         return 'CANMERTINYO!'
     }
 
-    @POST('/register')
+    @Post('/register')
     public async register() {
         return "registered!"
     }
 
-    @DELETE()
+    @Delete()
     public deleteUser() {
         return "success"
     }
@@ -102,9 +102,9 @@ For each custom provider, two main aspects need to be defined:
 
 **Instance**: This is the actual object that will be injected when the token is used.
 ```typescript
-import { App , Controller, useGlobalMiddlewares, customProdivers} from 'bitter-press';
+import { SetupApp , Controller, useGlobalMiddlewares, customProdivers} from 'bitter-press';
 
-@App({
+@SetupApp({
   port: 3000,
   controller : [],
   useGlobalMiddlewares: [],
