@@ -29,13 +29,9 @@ This repository is still heavily in development proccess, so there may be many b
 - Instance of express
 
   
-## Installation 
+## Installation
 
-To install the package:
-
-```bash 
- npm install bitter-press
-```
+Remove npm section for now. 
     
  Next, generate the tsconfig.json file at the root level of your project by running tsc --init, and within the compilerOptions object, include the following options:
 
