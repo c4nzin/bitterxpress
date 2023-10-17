@@ -1,8 +1,8 @@
 import { MethodArgumentMetadataKey } from '../enums';
-import { argumentDecoratorFactory } from './argument-decorator.factory';
+import { createArgumentDecorator } from './create-argument-decorator.factory';
 
-export const RequestBody = argumentDecoratorFactory(MethodArgumentMetadataKey.BODY);
-export const RequestParams = argumentDecoratorFactory(MethodArgumentMetadataKey.PARAMS);
-export const RequestQuery = argumentDecoratorFactory(MethodArgumentMetadataKey.QUERY);
-export const Request = argumentDecoratorFactory(MethodArgumentMetadataKey.REQUEST);
-export const Response = argumentDecoratorFactory(MethodArgumentMetadataKey.RESPONSE);
+export const RequestBody = createArgumentDecorator(MethodArgumentMetadataKey.BODY);
+export const RequestParams = createArgumentDecorator(MethodArgumentMetadataKey.PARAMS);
+export const RequestQuery = createArgumentDecorator(MethodArgumentMetadataKey.QUERY);
+export const Request = createArgumentDecorator(MethodArgumentMetadataKey.REQUEST);
+export const Response = createArgumentDecorator(MethodArgumentMetadataKey.RESPONSE);

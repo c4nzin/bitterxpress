@@ -1,5 +1,5 @@
 export * from './setup-app.decorator';
-export * from './argument-decorator.factory';
+export * from './create-argument-decorator.factory';
 export * from './constants/express-app-instance.constant';
 export * from './controller/controller.decorator';
 export * from './express-app-instance.decorator';
