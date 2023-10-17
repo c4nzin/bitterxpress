@@ -38,6 +38,13 @@ export class BootstrapService {
   }
 
   public bootstrap() {
+    this.setupExpressApp();
+    this.setupGlobalMiddlewares();
+    this.setupControllers();
+    this.startListening();
+  }
+
+  private setupExpressApp() {
     this.appProperties.customProviders = [
       ...(this.appProperties.customProviders || []),
       {
@@ -48,38 +55,38 @@ export class BootstrapService {
 
     this.registerCustomProviders(this.appProperties.customProviders);
     this.appInstance = DependencyContainer.get(this.appClass);
+  }
 
+  private setupGlobalMiddlewares() {
     const appMetadata: AppMetadata = this.getAppMetadata();
-
-    if (appMetadata.beforeGlobalMiddlewaresBoundMethodKey) {
-      this.appInstance[appMetadata.beforeGlobalMiddlewaresBoundMethodKey]();
-    }
-
+    this.executeLifecycleMethod(appMetadata.beforeGlobalMiddlewaresBoundMethodKey);
     this.expressApp.use(express.json());
+    this.useGlobalMiddlewares();
+    this.executeLifecycleMethod(appMetadata.afterGlobalMiddlewaresBoundMethodKey);
+  }
 
-    this.appProperties.useGlobalMiddlewares?.forEach((middleware: RequestHandler) =>
-      this.expressApp.use(middleware),
-    );
-
-    if (appMetadata.afterGlobalMiddlewaresBoundMethodKey) {
-      this.appInstance[appMetadata.afterGlobalMiddlewaresBoundMethodKey]();
-    }
-
+  private setupControllers() {
     if (this.appProperties.controllers) {
       this.registerControllers(this.appProperties.controllers);
     }
+    this.executeLifecycleMethod(this.getAppMetadata().afterRoutesBoundMethodKey);
+  }
 
-    if (appMetadata.afterRoutesBoundMethodKey) {
-      this.appInstance[appMetadata.afterRoutesBoundMethodKey]();
-    }
-    if (appMetadata.beforeListenStartedMethodKey) {
-      this.appInstance[appMetadata.beforeListenStartedMethodKey]();
-    }
-
+  private startListening() {
+    this.executeLifecycleMethod(this.getAppMetadata().beforeListenStartedMethodKey);
     this.expressApp.listen(this.appProperties.port);
+    this.executeLifecycleMethod(this.getAppMetadata().afterListenStartedMethodKey);
+  }
 
-    if (appMetadata.afterListenStartedMethodKey) {
-      this.appInstance[appMetadata.afterListenStartedMethodKey]();
+  private useGlobalMiddlewares() {
+    this.appProperties.useGlobalMiddlewares?.forEach((middleware: RequestHandler) =>
+      this.expressApp.use(middleware),
+    );
+  }
+
+  private executeLifecycleMethod(methodKey?: string) {
+    if (methodKey) {
+      this.appInstance[methodKey]();
     }
   }
 
@@ -103,14 +110,17 @@ export class BootstrapService {
   }
 
   private registerControllers(controllers: Constructible[]) {
-    controllers.forEach((controllers: Constructible) => this.registerController(controllers));
+    controllers.forEach((controllerClass: Constructible) =>
+      this.registerController(controllerClass),
+    );
   }
 
   private registerCustomProviders(providers: CustomProvider[]) {
     providers.forEach((provider) => {
-      typeof provider.token === 'string'
-        ? DependencyContainer.registerStringTokenDependency(provider.token, provider.instance)
-        : DependencyContainer.registerClassTokenDependency(provider.token, provider.instance);
+      const { token, instance } = provider;
+      typeof token === 'string'
+        ? DependencyContainer.registerStringTokenDependency(token, instance)
+        : DependencyContainer.registerClassTokenDependency(token, instance);
     });
   }
 
