@@ -49,8 +49,8 @@ To install the package:
 ```
 
 Now you are ready to go.
-## @App Decorator
-You can use a custom middleware with the app decorator, set the server's port, or use a specific controlle, also you can define a custom provider
+## @SetupApp Decorator
+You can use a custom middleware with the SetupApp decorator, set the server's port, or use a specific controlle, also you can define a custom provider
 
 ```typescript
 import { SetupApp , Controller, useGlobalMiddlewares, customProdivers} from 'bitter-press';
@@ -69,7 +69,7 @@ This framework supports classic HTTP methods and provides decorator-based suppor
 
 
 ```typescript
-import { App , Controller} from 'bitter-press';
+import { SetupApp , Controller} from 'bitter-press';
 
 @Controller('/auth')
 export class ExampleController {
@@ -96,7 +96,7 @@ And you can use other methods like: patch, update, put ...etc
 ## Custom Providers
 In addition to registering services, BitterPress allows you to define custom providers that can be injected into your application. These custom providers can be associated with string tokens or redefine what is injected, replacing class instances by using class tokens.
 
-To define custom providers, you should specify them within the **@App** decorator at the root level of your application. The customProviders property in the **@App** decorator's properties object is used to hold an array of these providers.
+To define custom providers, you should specify them within the **@SetupApp** decorator at the root level of your application. The customProviders property in the **@SetupApp** decorator's properties object is used to hold an array of these providers.
 
 For each custom provider, two main aspects need to be defined:
 
