@@ -1,12 +1,8 @@
 import express, { RequestHandler, Router, Response, Request } from 'express';
-import { Logger } from '../../logger';
+import { DependencyContainer } from '../../core/container/dependency.container';
+import { Constructible, AppProperties, EXPRESS_APP_INSTANCE_TOKEN, AppMetadata } from '../../core';
 import {
-  Constructible,
-  AppProperties,
-  EXPRESS_APP_INSTANCE_TOKEN,
-  AppMetadata,
   LifecycleHookMetadataKey,
-  CustomProvider,
   ControllerMetadata,
   MethodMetadata,
   ControllerMetadataKey,
@@ -18,23 +14,20 @@ import {
   ArgumentIndices,
   MethodArgumentMetadataKey,
 } from '../../core';
-import { DependencyContainer } from '../../core/container/dependency.container';
 
 export interface Headers {
-  [P: string]: string;
+  [key: string]: string;
 }
 
 export class BootstrapService {
-  private appInstance: any;
   private readonly expressApp: express.Express;
-  private readonly logger: Logger;
+  private appInstance: any;
 
   constructor(
     private readonly appClass: Constructible,
     private readonly appProperties: AppProperties,
   ) {
     this.expressApp = express();
-    this.logger = DependencyContainer.get(Logger);
   }
 
   public bootstrap() {
@@ -45,6 +38,11 @@ export class BootstrapService {
   }
 
   private setupExpressApp() {
+    this.setupCustomProviders();
+    this.setupAppInstance();
+  }
+
+  private setupCustomProviders() {
     this.appProperties.customProviders = [
       ...(this.appProperties.customProviders || []),
       {
@@ -52,8 +50,10 @@ export class BootstrapService {
         instance: this.expressApp,
       },
     ];
-
     this.registerCustomProviders(this.appProperties.customProviders);
+  }
+
+  private setupAppInstance() {
     this.appInstance = DependencyContainer.get(this.appClass);
   }
 
@@ -115,7 +115,7 @@ export class BootstrapService {
     );
   }
 
-  private registerCustomProviders(providers: CustomProvider[]) {
+  private registerCustomProviders(providers: any[]) {
     providers.forEach((provider) => {
       const { token, instance } = provider;
       typeof token === 'string'
@@ -159,7 +159,7 @@ export class BootstrapService {
           combinedHeaders,
         );
 
-        this.logger.info(
+        console.info(
           `Mapped ${methodMetadata.httpMethod} ${controllerMetadata.route}${methodMetadata.path}`,
         );
       }
