@@ -11,6 +11,9 @@ BitterPress is a framework for building efficient, scalable, and maintainable se
 ### Features
 BitterPress focuses on providing decorators for Express.js API logic abstraction with the added benefit of a simple built-in dependency injection container for a lightweight and minimalistic approach to TypeScript development.
 
+# Warning : 
+This repository is still heavily in development proccess, so there may be many bugs.
+
 
   
 - Controllers
@@ -31,7 +34,7 @@ BitterPress focuses on providing decorators for Express.js API logic abstraction
 To install the package:
 
 ```bash 
-  npm install bitter-press
+ npm install bitter-press
 ```
     
  Next, generate the tsconfig.json file at the root level of your project by running tsc --init, and within the compilerOptions object, include the following options:
