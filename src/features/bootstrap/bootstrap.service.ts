@@ -14,6 +14,7 @@ import {
   ArgumentIndices,
   MethodArgumentMetadataKey,
 } from '../../core';
+import { Logger } from '../../logger';
 
 export interface Headers {
   [key: string]: string;
@@ -26,6 +27,7 @@ export class BootstrapService {
   constructor(
     private readonly appClass: Constructible,
     private readonly appProperties: AppProperties,
+    private logger: Logger,
   ) {
     this.expressApp = express();
   }
@@ -159,7 +161,7 @@ export class BootstrapService {
           combinedHeaders,
         );
 
-        console.info(
+        this.logger.info(
           `Mapped ${methodMetadata.httpMethod} ${controllerMetadata.route}${methodMetadata.path}`,
         );
       }
