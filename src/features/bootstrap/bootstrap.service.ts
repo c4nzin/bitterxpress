@@ -106,7 +106,7 @@ export class BootstrapService {
 
     const metadata: any = {};
 
-    metadataKeys.forEach((key) => {
+    metadataKeys.forEach((key: LifecycleHookMetadataKey) => {
       metadata[key] = Reflect.getMetadata(key, this.appClass.prototype) || '';
     });
 
