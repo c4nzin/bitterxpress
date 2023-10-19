@@ -15,6 +15,7 @@ import {
   MethodArgumentMetadataKey,
 } from '../../core';
 import { Logger } from '../../logger';
+import 'reflect-metadata';
 
 export interface Headers {
   [key: string]: string;
@@ -23,13 +24,14 @@ export interface Headers {
 export class BootstrapService {
   private readonly expressApp: express.Express;
   private appInstance: any;
+  private readonly logger: Logger;
 
   constructor(
     private readonly appClass: Constructible,
     private readonly appProperties: AppProperties,
-    private logger: Logger,
   ) {
     this.expressApp = express();
+    this.logger = DependencyContainer.get(Logger);
   }
 
   public bootstrap() {
