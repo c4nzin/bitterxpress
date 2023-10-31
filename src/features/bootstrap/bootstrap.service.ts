@@ -1,31 +1,33 @@
 import express, { RequestHandler, Router, Response, Request } from 'express';
-import { DependencyContainer } from '../../core/container/dependency.container';
-import { Constructible, AppProperties, EXPRESS_APP_INSTANCE_TOKEN, AppMetadata } from '../../core';
 import {
+  Constructible,
+  AppProperties,
+  DependencyContainer,
+  AppMetadata,
   LifecycleHookMetadataKey,
+  CustomProvider,
   ControllerMetadata,
   MethodMetadata,
   ControllerMetadataKey,
   DefaultHttpStatusMetadataKey,
   ResponseHeadersMetadataKey,
   MiddlewareMetadataKey,
-  HttpMethods,
   HttpMethodMetadataKey,
   ArgumentIndices,
   MethodArgumentMetadataKey,
+  EXPRESS_APP_INSTANCE_TOKEN,
+  HttpMethods,
 } from '../../core';
 import { Logger } from '../../logger';
-import 'reflect-metadata';
 
 export interface Headers {
-  [key: string]: string;
+  [P: string]: string;
 }
 
 export class BootstrapService {
-  private readonly expressApp: express.Express;
   private appInstance: any;
+  private readonly expressApp: express.Express;
   private readonly logger: Logger;
-
   constructor(
     private readonly appClass: Constructible,
     private readonly appProperties: AppProperties,
@@ -34,124 +36,113 @@ export class BootstrapService {
     this.logger = DependencyContainer.get(Logger);
   }
 
-  public bootstrap() {
-    this.setupExpressApp();
-    this.setupGlobalMiddlewares();
-    this.setupControllers();
-    this.startListening();
-  }
-
-  private setupExpressApp() {
-    this.setupCustomProviders();
-    this.setupAppInstance();
-  }
-
-  private setupCustomProviders() {
+  bootstrap() {
     this.appProperties.customProviders = [
       ...(this.appProperties.customProviders || []),
-      {
-        token: EXPRESS_APP_INSTANCE_TOKEN,
-        instance: this.expressApp,
-      },
+      { token: EXPRESS_APP_INSTANCE_TOKEN, instance: this.expressApp },
     ];
     this.registerCustomProviders(this.appProperties.customProviders);
-  }
-
-  private setupAppInstance() {
     this.appInstance = DependencyContainer.get(this.appClass);
-  }
-
-  private setupGlobalMiddlewares() {
     const appMetadata: AppMetadata = this.getAppMetadata();
-    this.executeLifecycleMethod(appMetadata.beforeGlobalMiddlewaresBoundMethodKey);
+    if (appMetadata.beforeGlobalMiddlewaresBoundMethodKey) {
+      this.appInstance[appMetadata.beforeGlobalMiddlewaresBoundMethodKey]();
+    }
     this.expressApp.use(express.json());
-    this.useGlobalMiddlewares();
-    this.executeLifecycleMethod(appMetadata.afterGlobalMiddlewaresBoundMethodKey);
-  }
-
-  private setupControllers() {
+    this.appProperties.useGlobalMiddlewares?.forEach((middleware: RequestHandler) => {
+      this.expressApp.use(middleware);
+    });
+    if (appMetadata.afterGlobalMiddlewaresBoundMethodKey) {
+      this.appInstance[appMetadata.afterGlobalMiddlewaresBoundMethodKey]();
+    }
+    // execute before hook
+    if (appMetadata.beforeRoutesBoundMethodKey) {
+      this.appInstance[appMetadata.beforeRoutesBoundMethodKey]();
+    }
     if (this.appProperties.controllers) {
       this.registerControllers(this.appProperties.controllers);
     }
-    this.executeLifecycleMethod(this.getAppMetadata().afterRoutesBoundMethodKey);
-  }
-
-  private startListening() {
-    this.executeLifecycleMethod(this.getAppMetadata().beforeListenStartedMethodKey);
+    if (appMetadata.afterRoutesBoundMethodKey) {
+      this.appInstance[appMetadata.afterRoutesBoundMethodKey]();
+    }
+    if (appMetadata.beforeListenStartedMethodKey) {
+      this.appInstance[appMetadata.beforeListenStartedMethodKey]();
+    }
     this.expressApp.listen(this.appProperties.port);
-    this.executeLifecycleMethod(this.getAppMetadata().afterListenStartedMethodKey);
-  }
-
-  private useGlobalMiddlewares() {
-    this.appProperties.useGlobalMiddlewares?.forEach((middleware: RequestHandler) =>
-      this.expressApp.use(middleware),
-    );
-  }
-
-  private executeLifecycleMethod(methodKey?: string) {
-    if (methodKey) {
-      this.appInstance[methodKey]();
+    if (appMetadata.afterListenStartedMethodKey) {
+      this.appInstance[appMetadata.afterListenStartedMethodKey]();
     }
   }
 
   private getAppMetadata(): AppMetadata {
-    const metadataKeys: LifecycleHookMetadataKey[] = [
+    const beforeGlobalMiddlewaresBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.BEFORE_MIDDLEWARES_BOUND,
+      this.appClass.prototype,
+    );
+    const afterGlobalMiddlewaresBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.AFTER_MIDDLEWARES_BOUND,
+      this.appClass.prototype,
+    );
+    const beforeRoutesBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.BEFORE_ROUTES_BOUND,
+      this.appClass.prototype,
+    );
+    const afterRoutesBoundMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.AFTER_ROUTES_BOUND,
+      this.appClass.prototype,
+    );
+    const beforeListenStartedMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.BEFORE_LISTEN_STARTED,
+      this.appClass.prototype,
+    );
+    const afterListenStartedMethodKey: string = Reflect.getMetadata(
       LifecycleHookMetadataKey.AFTER_LISTEN_STARTED,
-    ];
-
-    const metadata: any = {};
-
-    metadataKeys.forEach((key: LifecycleHookMetadataKey) => {
-      metadata[key] = Reflect.getMetadata(key, this.appClass.prototype) || '';
-    });
-
-    return metadata;
+      this.appClass.prototype,
+    );
+    return {
+      beforeGlobalMiddlewaresBoundMethodKey,
+      afterGlobalMiddlewaresBoundMethodKey,
+      beforeRoutesBoundMethodKey,
+      afterRoutesBoundMethodKey,
+      beforeListenStartedMethodKey,
+      afterListenStartedMethodKey,
+    };
   }
 
   private registerControllers(controllers: Constructible[]) {
-    controllers.forEach((controllerClass: Constructible) =>
-      this.registerController(controllerClass),
-    );
+    controllers.forEach((controller: Constructible) => {
+      this.registerController(controller);
+    });
   }
 
-  private registerCustomProviders(providers: any[]) {
-    providers.forEach((provider) => {
-      const { token, instance } = provider;
-      typeof token === 'string'
-        ? DependencyContainer.registerStringTokenDependency(token, instance)
-        : DependencyContainer.registerClassTokenDependency(token, instance);
+  private registerCustomProviders(providers: CustomProvider[]) {
+    providers.forEach((provider: CustomProvider) => {
+      if (typeof provider.token === 'string') {
+        DependencyContainer.registerStringTokenDependency(provider.token, provider.instance);
+      } else {
+        DependencyContainer.registerClassTokenDependency(provider.token, provider.instance);
+      }
     });
   }
 
   private registerController(controllerClass: Constructible) {
     const controllerMetadata: ControllerMetadata = this.getControllerMetadata(controllerClass);
-    const controllerInstance: any = DependencyContainer.get(controllerClass);
+    const controller: any = DependencyContainer.get(controllerClass);
+    const keys: string[] = Object.keys(controllerClass.prototype);
     const router: Router = express.Router();
-
     if (controllerMetadata.middlewares) {
       router.use(controllerMetadata.middlewares);
     }
-
-    const controllerMethods: string[] = Object.getOwnPropertyNames(controllerClass.prototype);
-
-    controllerMethods.forEach((methodKey: string) => {
+    keys.forEach((key: string) => {
       const methodMetadata: MethodMetadata | undefined = this.getMethodMetadata(
         controllerClass,
-        methodKey,
+        key,
       );
-
       if (methodMetadata) {
-        const handler: Function = controllerInstance[methodKey].bind(controllerInstance);
-        const combinedHeaders: any = {
+        const handler: Function = controller[key].bind(controller);
+        const headers: any = {
           ...(controllerMetadata.headers || {}),
           ...(methodMetadata.headers || {}),
         };
-
         this.registerHandler(
           router,
           methodMetadata.httpMethod,
@@ -160,64 +151,70 @@ export class BootstrapService {
           handler,
           methodMetadata.argumentIndices,
           methodMetadata.defaultHttpStatus || controllerMetadata.defaultHttpStatus,
-          combinedHeaders,
+          headers,
         );
-
         this.logger.info(
-          `Mapped ${methodMetadata.httpMethod} ${controllerMetadata.route}${methodMetadata.path}`,
+          `Mapped ${methodMetadata.httpMethod.toUpperCase()} ${controllerMetadata.route}${
+            methodMetadata.path
+          }`,
         );
       }
     });
-
     this.expressApp.use(controllerMetadata.route, router);
   }
 
   private getControllerMetadata(controller: Constructible): ControllerMetadata {
-    return {
-      route: Reflect.getMetadata(ControllerMetadataKey.ROUTE, controller) || '',
-      defaultHttpStatus: Reflect.getMetadata(
-        DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
-        controller,
-      ),
-      headers: Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller) || {},
-      middlewares: Reflect.getMetadata(MiddlewareMetadataKey.USE_MIDDLEWARES, controller) || [],
-    };
+    const route: string = Reflect.getMetadata(ControllerMetadataKey.ROUTE, controller);
+    const defaultHttpStatus: number | undefined = Reflect.getMetadata(
+      DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
+      controller,
+    );
+    const headers: any = Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller);
+    const middlewares: RequestHandler[] = Reflect.getMetadata(
+      MiddlewareMetadataKey.USE_MIDDLEWARES,
+      controller,
+    );
+    return { route, middlewares, defaultHttpStatus, headers };
   }
 
   private getMethodMetadata(
     controller: Constructible,
     methodKey: string,
   ): MethodMetadata | undefined {
-    const methodMetadata: MethodMetadata = {
-      httpMethod: Reflect.getMetadata(
-        HttpMethodMetadataKey.METHOD,
-        controller.prototype,
-        methodKey,
-      ),
-      path: Reflect.getMetadata(HttpMethodMetadataKey.PATH, controller.prototype, methodKey) || '',
-      defaultHttpStatus: Reflect.getMetadata(
+    const httpMethod: HttpMethods = Reflect.getMetadata(
+      HttpMethodMetadataKey.METHOD,
+      controller.prototype,
+      methodKey,
+    );
+    if (httpMethod) {
+      const path: string =
+        Reflect.getMetadata(HttpMethodMetadataKey.PATH, controller.prototype, methodKey) || '';
+      const defaultHttpStatus: number = Reflect.getMetadata(
         DefaultHttpStatusMetadataKey.DEFAULT_HTTP_STATUS,
         controller.prototype,
         methodKey,
-      ),
-      middlewares:
+      );
+      const middlewares: RequestHandler[] =
         Reflect.getMetadata(
           MiddlewareMetadataKey.USE_MIDDLEWARES,
           controller.prototype,
           methodKey,
-        ) || [],
-      headers:
-        Reflect.getMetadata(ResponseHeadersMetadataKey.HEADERS, controller.prototype, methodKey) ||
-        {},
-      argumentIndices: this.getArgumentIndices(controller.prototype, methodKey),
-    };
-
-    if (methodMetadata.httpMethod) {
-      return methodMetadata;
+        ) || [];
+      const headers: any = Reflect.getMetadata(
+        ResponseHeadersMetadataKey.HEADERS,
+        controller.prototype,
+        methodKey,
+      );
+      const argumentIndices: ArgumentIndices = this.getArgumentIndices(
+        controller.prototype,
+        methodKey,
+      );
+      return { httpMethod, path, defaultHttpStatus, middlewares, argumentIndices, headers };
     }
+    return undefined;
   }
 
-  private async registerHandler(
+  private registerHandler(
     router: Router,
     method: HttpMethods,
     path: string,
@@ -227,38 +224,41 @@ export class BootstrapService {
     defaultHttpStatus?: number,
     headers?: Headers,
   ) {
-    router[method](path, ...middlewares, async (req: Request, res: Response) => {
+    const expressHandler: RequestHandler = async (req: Request, res: Response) => {
       const args: any[] = [];
-
-      for (const [key, index] of Object.entries(argumentIndices)) {
-        if (index !== null) {
-          args[index] =
-            key === MethodArgumentMetadataKey.RESPONSE ? res : req[key as keyof typeof req];
-        }
+      if (argumentIndices[MethodArgumentMetadataKey.BODY] != null) {
+        args[argumentIndices[MethodArgumentMetadataKey.BODY] as number] = req.body;
       }
-
+      if (argumentIndices[MethodArgumentMetadataKey.QUERY] != null) {
+        args[argumentIndices[MethodArgumentMetadataKey.QUERY] as number] = req.query;
+      }
+      if (argumentIndices[MethodArgumentMetadataKey.PARAMS] != null) {
+        args[argumentIndices[MethodArgumentMetadataKey.PARAMS] as number] = req.params;
+      }
+      if (argumentIndices[MethodArgumentMetadataKey.REQUEST] != null) {
+        args[argumentIndices[MethodArgumentMetadataKey.REQUEST] as number] = req;
+      }
+      if (argumentIndices[MethodArgumentMetadataKey.RESPONSE] != null) {
+        args[argumentIndices[MethodArgumentMetadataKey.RESPONSE] as number] = res;
+      }
       if (defaultHttpStatus) {
         res.status(defaultHttpStatus);
       }
-
       if (headers) {
-        for (const [headerName, headerValue] of Object.entries(headers)) {
-          res.setHeader(headerName, headerValue);
-        }
+        res.set(headers);
       }
-
       const response: any = await handler(...args);
       res.send(response);
-    });
+    };
+    const handlers: RequestHandler[] = [...middlewares, expressHandler];
+    router[method](path, ...handlers);
   }
 
   private getArgumentIndices(target: any, methodKey: string): ArgumentIndices {
-    const indices: ArgumentIndices = {} as ArgumentIndices;
-
-    for (const key of Object.values(MethodArgumentMetadataKey)) {
-      indices[key] = Reflect.getMetadata(key, target, methodKey);
-    }
-
+    const indices: ArgumentIndices = {};
+    Object.values(MethodArgumentMetadataKey).forEach((key: string) => {
+      indices[key as MethodArgumentMetadataKey] = Reflect.getMetadata(key, target, methodKey);
+    });
     return indices;
   }
 }
