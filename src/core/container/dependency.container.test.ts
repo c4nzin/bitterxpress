@@ -11,7 +11,7 @@ describe('DependencyContainer', () => {
     const exampleDependency = 'Example Dependency';
 
     // Act
-    DependencyContainer.registerStringTokenDependency('exampleToken', exampleDependency);
+    DependencyContainer.registerDependency('exampleToken', exampleDependency);
     const retrievedDependency = DependencyContainer.get('exampleToken');
 
     // Assert
@@ -21,7 +21,7 @@ describe('DependencyContainer', () => {
   it('should resolve a class dependency with no constructor parameters', () => {
     // Arrange
     class ExampleClass {}
-    DependencyContainer.registerClassTokenDependency(ExampleClass);
+    DependencyContainer.registerDependency(ExampleClass);
 
     // Act
     const resolvedInstance = DependencyContainer.resolve(ExampleClass);
@@ -39,9 +39,9 @@ describe('DependencyContainer', () => {
       constructor(a: DependencyA, b: DependencyB) {}
     }
 
-    DependencyContainer.registerClassTokenDependency(DependencyA);
-    DependencyContainer.registerClassTokenDependency(DependencyB);
-    DependencyContainer.registerClassTokenDependency(ExampleClass);
+    DependencyContainer.registerDependency(DependencyA);
+    DependencyContainer.registerDependency(DependencyB);
+    DependencyContainer.registerDependency(ExampleClass);
 
     // Act
     const resolvedInstance = DependencyContainer.resolve(ExampleClass);
